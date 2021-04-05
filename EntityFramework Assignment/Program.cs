@@ -4,47 +4,83 @@ using System.Collections.Generic;
 
 namespace EntityFramework_Assignment
 {
-    class product
+    class Order
     {
-        public int Id { get; set; }
-        public string name { get; set; }
-        public decimal price { get; set; }
-        public decimal weight { get; set; }
-
-        public List<ordered_products> ordered_productorder { get; set; }
-
-    }
-    class orders
-    {
-        public int Id { get; set; }
-        public decimal billamount { get; set; }
-        public decimal price { get; set; }
-        public List<ordered_products> ordered_productproduct  { get; set; }
+        public int OrderId { get; set; }
+        public string Name { get; set; }
+        public List<Store> Total_Products { get; set; }
     }
 
-    class ordered_products
+    class Product
     {
-        public int ordered_productorderID { get; set; }
-        public int ordered_productproductID { get; set; }
-        
+        public int ProductId { get; set; }
+        public string Name { get; set; }
+        public int Price { get; set; }
+
+        public List<Store> Total_Orders { get; set; }
     }
 
-    class storesellscontext : DbContext
+    class Store
     {
-        public DbSet<product> product { get; set; }
-        public DbSet<orders> orders { get; set; }
-        public Dbset<ordered_products> ordered_products { get; set; }
+        public int StoreID { get; set; }
+        public Order Order { get; set; }
+        public Product Product { get; set; }
+        public int ProductCount { get; set; }
+    }
 
+    class OrderContext : DbContext
+    {
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<Store> Store { get; set; }
+
+        string connectionstring = "Server=(localdb)\\MSSQLLocalDB; Database=MVC_manyrelationship;Trusted_Connection=True;MultipleActiveResultSets=true";
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer();
+            optionsBuilder.UseSqlServer(connectionstring);
         }
-    } 
+    }
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            using (OrderContext context = new OrderContext())
+            {
+                context.Database.EnsureCreated();
+
+                Product MyProduct1 = new Product();
+                MyProduct1.ProductId = 1;
+                MyProduct1.Name = "Product 1";
+                MyProduct1.Price = 10;
+
+                Product MyProduct2 = new Product();
+                MyProduct2.ProductId = 2;
+                MyProduct2.Name = "Product 2";
+                MyProduct2.Price = 18;
+
+                Order MyOrder1 = new Order();
+                MyOrder1.OrderId = 1;
+
+
+                Order MyOrder2 = new Order();
+                MyOrder2.OrderId = 2;
+
+
+                Order MyOrder3 = new Order();
+                MyOrder3.OrderId = 3;
+
+
+                context.Products.Add(MyProduct1);
+                context.Products.Add(MyProduct2);
+
+                context.Orders.Add(MyOrder1);
+                context.Orders.Add(MyOrder2);
+                context.Orders.Add(MyOrder3);
+
+                context.SaveChanges();
+
+            }
+
         }
     }
 }
