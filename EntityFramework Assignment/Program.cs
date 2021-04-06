@@ -34,7 +34,7 @@ namespace EntityFramework_Assignment
         public DbSet<Order> Orders { get; set; }
         public DbSet<Store> Store { get; set; }
 
-        string connectionstring = "Server=(localdb)\\MSSQLLocalDB; Database=MVC_manyrelationship;Trusted_Connection=True;MultipleActiveResultSets=true";
+        string connectionstring = "Server=(localdb)\\MSSQLLocalDB; Database=EntityFramework_Assignment;Trusted_Connection=True;MultipleActiveResultSets=true";
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(connectionstring);
